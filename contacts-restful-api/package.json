@@ -1,0 +1,15 @@
+{
+  "name": "contacts-restful-api",
+  "version": "1.0.0",
+  "description": "Simple RESTful service for storing contacts information",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Carlo Vassallo <vassallocarlo97@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4"
+  }
+}
