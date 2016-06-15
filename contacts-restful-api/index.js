@@ -85,7 +85,7 @@ app.post('/contact', function (req, res) {
             message: 'OK'
         });
     } else
-        res.status(404).json({
+        res.status(400).json({
             error: true,
             code: 400,
             message: 'MISSING PARAMETERS'
