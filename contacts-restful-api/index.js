@@ -2,10 +2,16 @@
 
 // requires
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const auth = require('basic-auth');
 
 // variables
 var app = express();
+var admin = {
+    username: 'vassallocarlo',
+    password: '1234'
+};
+// basic dmFzc2FsbG9jYXJsbzoxMjM0
 var contacts = [
     {
         name: 'carlo',
@@ -18,7 +24,7 @@ var contacts = [
 app.use(bodyParser.json());
 app.use(function (err, req, res, next) {
     if (err) {
-        res.status(500).send({
+        res.status(500).json({
             error: true,
             code: 500,
             message: err.message
@@ -26,7 +32,27 @@ app.use(function (err, req, res, next) {
     } else {
         next();
     }
+});
+app.use(function (req, res, next) {
+    var user = auth(req);
 
+    if (!user || !user.name || !user.pass) {
+        res.status(401).json({
+            error: true,
+            code: 401,
+            message: 'MISSING AUTH PARAMS'
+        });
+    };
+
+    if (user.name === admin.username && user.pass === admin.password) {
+        return next();
+    } else {
+        res.status(401).json({
+            error: true,
+            code: 401,
+            message: 'WRONG CREDENTIALS'
+        });
+    };
 });
 
 // resource
@@ -40,12 +66,13 @@ app.post('/contact', function (req, res) {
             return true;
         return false;
     }))
-        res.status(404).json({
+        res.status(400).json({
             error: true,
             code: 400,
             message: 'CONTACT NAME ALREADY REGISTERED'
         });
 
+    console.log(req.body);
     if (req.body.name && req.body.surname && req.body.phone) {
         contacts.push({
             name: req.body.name,
@@ -135,6 +162,15 @@ app.delete('/contact/:name', function (req, res) {
             error: true,
             code: 404,
             message: 'NOT FOUND'
+        });
+});
+
+// default route
+app.use(function (req, res, next) {
+    res.status(404).json({
+            error: true,
+            code: 404,
+            message: 'ROUTE NOT FOUND'
         });
 });
 
