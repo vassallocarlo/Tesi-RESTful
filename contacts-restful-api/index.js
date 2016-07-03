@@ -21,6 +21,17 @@ var contacts = [
 ];
 
 // middleware
+app.use(function(req, res, next) {
+    res.header('access-control-allow-origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+
+    if ('OPTIONS' == req.method) 
+      res.status(204).send();
+    else 
+      next();
+    
+});
 app.use(bodyParser.json());
 app.use(function (err, req, res, next) {
     if (err) {
